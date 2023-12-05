@@ -167,20 +167,23 @@ Clearly, a higher resolution makes a big difference to making these images look 
 
 
 
-I saved all of these different graphs into my working directory, and then saved the final version of my graph in my 'figures' folder.
+I saved all of these different graphs into my 'figures' folder.
 
 ```{r, warning=FALSE}
+library(ggplot2)
 # Experimenting with different versions of the figure
 # These I have saved to the general working directory 
-ggsave("penguin_bar.png", plot = penguin_bar,width = 6, height = 4, dpi = 300)
-ggsave("morewidth.png", plot = penguin_bar,width = 10, height = 4, dpi = 300)
-ggsave("moreheight.png", plot = penguin_bar,width = 6, height = 10, dpi = 300)
-ggsave("moreres.png", plot = penguin_bar,width = 6, height = 4, dpi = 1000)
+ggsave("/home/alanazammit/Reproducible_Figures_git/figures/penguin_bar.png", plot = penguin_bar,width = 6, height = 4, dpi = 300)
+ggsave("/home/alanazammit/Reproducible_Figures_git/figures/morewidth.png", plot = penguin_bar,width = 10, height = 4, dpi = 300)
+ggsave("/home/alanazammit/Reproducible_Figures_git/figures/moreheight.png", plot = penguin_bar,width = 6, height = 10, dpi = 300)
+ggsave("/home/alanazammit/Reproducible_Figures_git/figures/moreres.png", plot = penguin_bar,width = 6, height = 4, dpi = 1000)
 
-# Scaling it - this will be my final plot, and so I will save it in my figures folder, and rename it #something more clear that it is my final figure
+# Scaling it - this will be my final plot, and so I will save it in my figures folder, and rename it
+# something more clear that it is my final figure
 scaling_factor <- 1.2
-ggsave("/home/alanazammit/Reproducible_Figures_R/figures/final_figure.png", plot = penguin_bar, width = 6*scaling_factor, height = 4*scaling_factor, dpi = 1000)
+ggsave("/home/alanazammit/Reproducible_Figures_git/figures/final_figure.png", plot = penguin_bar, width = 6*scaling_factor, height = 4*scaling_factor, dpi = 1000)
 ```
+
 
 
 ### Statistical Method
