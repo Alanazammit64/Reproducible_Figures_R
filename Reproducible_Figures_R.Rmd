@@ -1,6 +1,7 @@
 ---
 title: "Reproducible Figures R"
-output: html_document
+output:
+  html_document: default
 date: "2023-12-03"
 ---
 
@@ -390,7 +391,7 @@ To conclude, the null hypothesis that the slope of the regression line is equal 
 
 *Upload your RProject you created for **Question 2** and any files and subfolders used to GitHub. Do not include any identifiers such as your name. Make sure your GitHub repo is public.*
 
-*GitHub link:*
+*GitHub link:* ![Link to my repository on Github](https://github.com/mimzy64/Reproducible_Figures_R)
 
 *You will be marked on your repo organisation and readability.*
 
