@@ -304,7 +304,8 @@ lm_combined_graph <- ggplot(penguins_clean, aes(x = culmen_depth_mm, y = culmen_
 lm_combined_graph
 ```
 
-We can see the negative gradient of the regression line, suggesting culmen depth negatively predicts culmen length, but with a lot of scatter around it: the data does not fit neatly to the line
+We can see the negative gradient of the regression line, suggesting culmen depth negatively predicts culmen length.
+
 
 **Linear regression with differentiation by species**
 
@@ -383,6 +384,8 @@ There is a positive relationship between culmen length and depth within each of 
 
 ### Conclusion
 To conclude, the null hypothesis that the slope of the regression line is equal to zero can be rejected to a highly significant degree: culmen length can be predicted by its depth for each of the three species. Within species, an increase in culmen depth predicts in an increase in culmen length. If we combine data across the three species, the positive relationship found within species is reversed, and culmen length can be predicted by its depth in the reverse manner: an increase in depth results in a decrease in length. This is an example of Simpson's paradox, and exemplifies that caution must be taken when combining data from differnet species or groupings into one dataset. Future research should look into whether there is an overarching relationship between culmen length and depth across all penguins species. 
+
+The main limitation of my analysis was that there were many confounding factors not controlled for, that could have easily influenced my results. I analysed data across both sexes, and all ages; both of these variables could have been subgrouped to ensure that the analyses was more accurate. Furthermore, my analyses spanned 3 different islands (Torgerson, Biscoe, and Dream), which may all vary greatly in selective pressures. Therefore, whilst I have concluded that culmen depth can predict culmen length to some extent, the affects of sex, age, and island must all be investigated to determine the strength of this association. 
 
 ------------------------------------------------------------------------
 
