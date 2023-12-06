@@ -1,8 +1,7 @@
 ---
 title: "Reproducible Figures R"
-output:
-  html_document: default
 date: "2023-12-03"
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -25,6 +24,7 @@ library(dplyr)
 
 data("penguins")
 
+# Finding the average bill length of the penguins by species 
 avg_billlength <- penguins %>%
   group_by(species) %>%
   summarise(avg_billlength = mean(bill_length_mm, na.rm = TRUE))
@@ -33,7 +33,7 @@ avg_billlength <- penguins %>%
 avg_billlength$species <- factor(avg_billlength$species, 
                                    levels = c("Adelie", "Gentoo", "Chinstrap"))
 
-
+# Plotting the data (badly)
 ggplot(avg_billlength, aes(x = species, y = avg_billlength)) +
   geom_bar(stat = "identity", fill = "skyblue") +
   labs(x = "Species", y = "Average Bill Length") +
@@ -59,7 +59,7 @@ Olande, O. (2013). Making sense of a" misleading" graph. Nordisk matematikkdidak
 ## QUESTION 2: Data Pipeline
 
 ### Introduction
-In this section, I will be analysing the palmerpenguins dataset, which contains entries for three different species of penguin: Adelie, Gentoo, and Chinstrap penguins, to see if there is a relationship between culmen length and depth across penguins. In particular, I will be looking to see if culmen length can be predicted by culmen depth. The culmen is the ridge along the top part of the penguin's bill, as demonstrated below. 
+In this section, I will be analysing the palmerpenguins dataset, which contains entries for three different species of penguin: Adelie, Gentoo, and Chinstrap penguins, all of which are found in Antarctica. I will be looking to see if there is a relationship between culmen length and depth across penguins. In particular, I will be looking to see if culmen length can be predicted by culmen depth. The culmen is the ridge along the top part of the penguin's bill, as demonstrated below. 
 
 ![What is the culmen?](culmen.png){ width=300px }
 
@@ -69,9 +69,9 @@ I predict that culmen length will be predicted by culmen depth, and that there w
 
 My hypotheses are for regressions within species (I will conduct a separate regression for each to test these hypotheses against).
 
-H₀: The slope of the regression line is equal to zero
+H₀: The slope of the regression line is equal to zero (β) = 0; culmen length is not predicted by culmen depth 
 
-H₁: The slope of the regression line is greater than zero
+H₁: The slope of the regression line is greater than zero (β) ≠ 0; an increase in culmen depth predicts an increase in culmen length 
 
 ![Adelie, Gentoo, and Chinstrap size comparision](differentpenguins.jpg){ width=300px }
 
@@ -243,6 +243,8 @@ qqline(res_gentoo)
 
 Overall, it appears that the data fits the assumptions of normality and linearity, and so it is appropriate to fit it with a linear model. 
 
+
+I then conducted a linear regression for all of the species together, and for each of the species individually
 
 **Linear regression without differentiating by species:**
 
