@@ -8,8 +8,16 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r, echo = FALSE, message=FALSE, warning=FALSE, results='hide'}
+# Saving the images that I will call into this document later into a folder called images
+file.rename("culmen.png", "images/culmen.png")
+file.rename("lessreszoom.png", "images/lesreszoom.png")
+file.rename("morereszoom.png", "images/morereszoom.png")
+file.rename("differentpenguins.jpg", "images/differentpengiuns.jpg")
+```
 
 ## QUESTION 01: Data Visualisation for Science Communication
+
 
 ### a) My misleading figure:
 
