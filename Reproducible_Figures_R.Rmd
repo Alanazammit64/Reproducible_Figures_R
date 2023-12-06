@@ -11,8 +11,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## QUESTION 01: Data Visualisation for Science Communication
 
-*Create a figure using the Palmer Penguin dataset that is correct but badly communicates the data. **Do not make a boxplot**.*
-
 ### a) My misleading figure:
 
 ```{r bad figure code, echo=FALSE, message=FALSE, warning=FALSE}
@@ -48,32 +46,26 @@ ggplot(avg_billlength, aes(x = species, y = avg_billlength)) +
 
 ### b) Write about how your design choices mislead the reader about the underlying data (200-300 words).
 
-There are a few common ways in which graphs are misleading. The first is when the y-axis is cut off so that it does not start from zero. This is known as an omitted baseline, or y-axis truncation (Olande, 2013). The resulting areas of the bar graphs are no longer representative of the actual value they hold; it exaggerates their differences. This is a common issue in both the media and research publications. For example, a chart aired on Fox News depicted a bar graph of the increase of tax rate if the Bush Tax Cuts expired. The bar representing the future if the tax cuts did expire was 6 times taller than the first bar (representing the present), despite the fact that there was just a 4.6% tax rate increase (ratio of 1.13 to 1) (Correll, 2020). This is what has occurred in my design, as the y-axis only starts at 35, making the average bill length of Adelie penguins seem proportionally much smaller than the other penguins than it actually is. Furthermore, by ordering the species by increasing bill length and using a line to show the 'increasing trend', it gives the impression that there is continuity or progression between species. This implies a relationship or trend where none exists. By combining these erroneous manipulations - the omitted baseline and a fake 'increasing trend', the graph misleads viewers into perceiving a significant trend or relationship between the categories when, in fact, there might not be one.
-
-**References** 
-
-Correll, M., Bertini, E., & Franconeri, S. (2020, April). Truncating the y-axis: Threat or menace?. In Proceedings of the 2020 CHI Conference on Human Factors in Computing Systems (pp. 1-12).
-
-Olande, O. (2013). Making sense of a" misleading" graph. Nordisk matematikkdidaktikk, 18(1), 5-30.
+There are a few common ways in which graphs are misleading. The first is when the y-axis is cut off so that it does not start from zero. This is known as an omitted baseline, or y-axis truncation (Olande, 2013). The resulting areas of the bar graphs are no longer representative of the actual value they hold; it exaggerates their differences. This is a common issue in both the media and research publications. For example, a chart aired on Fox News depicted a bar graph of the increase of tax rate if the Bush Tax Cuts expired. The bar representing the future if the tax cuts did expire was 6 times taller than the first bar (representing the present), despite the fact that there was just a 4.6% tax rate increase (ratio of 1.13 to 1) (Correll, 2020). This is what has occurred in my design, as the y-axis only starts at 35, making the average bill length of Adelie penguins seem proportionally much smaller than the other penguins than it actually is. Furthermore, by ordering the species by increasing bill length and using a line to show the 'increasing trend', it gives the impression that there is continuity or progression between species. This implies a relationship or trend where none exists. By combining these erroneous manipulations - the omitted baseline and a fake 'increasing trend', my graph misleads viewers into perceiving a significant trend or relationship between the categories when, in fact, there might not be one.
 
 ------------------------------------------------------------------------
 
 ## QUESTION 2: Data Pipeline
 
 ### Introduction
-In this section, I will be analysing the palmerpenguins dataset, which contains entries for three different species of penguin: Adelie, Gentoo, and Chinstrap penguins, all of which are found in Antarctica. I will be looking to see if there is a relationship between culmen length and depth across penguins. In particular, I will be looking to see if culmen length can be predicted by culmen depth. The culmen is the ridge along the top part of the penguin's bill, as demonstrated below. 
+In this section, I will be analysing the *palmerpenguins* dataset, which contains entries for three different species of penguin: Adelie, Gentoo, and Chinstrap penguins, all of which are found in Antarctica. I will be looking to see if there is a relationship between culmen length and depth across the penguins. In particular, I will be looking to see if culmen length can be predicted by culmen depth within each of the three species. The culmen is the ridge along the top part of the penguin's bill, as demonstrated below. 
 
 ![What is the culmen?](culmen.png){ width=300px }
 
 
 ### Hypothesis
-I predict that culmen length will be predicted by culmen depth, and that there will be a positive relationship between the two variables within species. Within species, bigger individuals will have longer and deeper bills, and so the depth and length of their culmens will increase respectively. However, I believe that this relationship will change as we look across species, as the three species are similar in size yet have different bill morphology (see image below), as they are adapted for different functions. This suggests that there will be more fluctuation in the relationship between culmen length and depth across species.
+I predict that culmen length will be predicted by culmen depth, and that there will be a positive relationship between the two variables within species. Within species, bigger individuals will have longer and deeper bills, and so the depth and length of their culmens will increase respectively. However, I believe that this relationship will change as we look across species, as the three species are similar in size yet have different bill morphology (see image below), as they are adapted to different niches. This suggests that there will be more fluctuation in the relationship between culmen length and depth across species.
 
-My hypotheses are for regressions within species (I will conduct a separate regression for each to test these hypotheses against).
+My hypotheses are for linear regressions within species (I will conduct a separate regression for each to test these hypotheses against).
 
-H₀: The slope of the regression line is equal to zero (β) = 0; culmen length is not predicted by culmen depth 
+- **H₀**: The slope of the regression line is equal to zero (β) = 0; culmen length is not predicted by culmen depth 
 
-H₁: The slope of the regression line is greater than zero (β) > 0; an increase in culmen depth predicts an increase in culmen length 
+- **H₁**: The slope of the regression line is greater than zero (β) > 0; an increase in culmen depth predicts an increase in culmen length 
 
 ![Adelie, Gentoo, and Chinstrap size comparision](differentpenguins.jpg){ width=300px }
 
@@ -81,25 +73,25 @@ H₁: The slope of the regression line is greater than zero (β) > 0; an increas
 
 To visualise my data, I plotted a scatter graph between culmen length and depth. However, to do this, I first had to undergo several steps demonstrated below to ensure all of my code ran smoothly and was reproducible. 
 
-**Preserving the raw data**
+#### **Preserving the raw data**
 
-To preserve the raw data, I firstly created a 'data_raw' folder.
+To preserve the raw data, I firstly created a *'data_raw'* folder.
 
 ```{r, warning=FALSE}
 dir.create("data_raw")
 ```
 
-I then saved the variable penguins_raw as a csv file that will not be worked on.
+I then saved the variable *'penguins_raw'* as a csv file that will not be worked on.
 
 ```{r}
 write.csv(penguins_raw, "data_raw/penguins_raw.csv")
 ```
 
-I could then clean the penguins_raw dataset, knowing that there is a safe read-only version safe in my data_raw folder.
+I could then clean the *'penguins_raw'* dataset, knowing that there is a safe read-only version safe in my data_raw folder.
 
 
 
-**Cleaning the data**
+#### **Cleaning the data**
 
 ```{r, warning=FALSE}
 # Loading my cleaning function into the directory
@@ -115,13 +107,13 @@ write.csv(penguins_clean, "data_clean/penguins_clean.csv")
 
 To clean my data, I created a cleaning function which can be found in the folder 'functions'. This allows the function to be applied to lots of different code, and thus increases the code's reproducibility. 
 
-I created a new variable called 'penguins_clean' so that I did not override the penguins_raw variable, and therefore by creating a new variable with the removed columns, this code can be repeatedly run without causing any errors. This is done through the package dplyr using piping, which is where the operator %>% allows multiple functions to be joined together in their specific order.
+I created a new variable called *'penguins_clean'* so that I did not override the *'penguins_raw'* variable. By creating a new variable with the removed columns, this code could be repeatedly run without causing any errors. This is done through the package dplyr using piping, which is where the operator %>% allows multiple functions to be joined together in their specific order.
 
-It was then necessary to clean the names of the columns, as they are very problematic in the raw dataset; they include mixed capitals and lower case letters, and spaces between words which often causes issues in coding. Whilst it may be easier to make changes to the column names directly in the excel spreadsheet, this is unreproducible, as others cannot see these changes taking place. Therefore we must change them in our code. This can be done by adding an extra line of code to our data cleaning, using the piping operator %>% to include name cleaning in the overall cleaning function. The clean_names() function is part of the janitor package and is used to standardise column names within a data frame: it converts capital letters to lower case; replaces spaces, punctuation, and special characters from column names with underscores; and removes characters that are not letters, numbers, or underscores.
+It was then necessary to clean the names of the columns, as they are very problematic in the raw dataset; they include mixed capitals and lower case letters, and spaces between words which often causes issues in coding. Whilst it may be easier to make changes to the column names directly in the excel spreadsheet, this is unreproducible, as others cannot see these changes taking place. Therefore we must change them in our code. This can be done by adding an extra line of code to our data cleaning, using the piping operator %>% to include name cleaning in the overall cleaning function. The *'clean_names()'* function is part of the janitor package and is used to standardise column names within a data frame: it converts capital letters to lower case; replaces spaces, punctuation, and special characters from column names with underscores; and removes characters that are not letters, numbers, or underscores.
 
 
 
-**Creating a scatterplot**
+#### **Creating a scatterplot**
 
 To visualise the relationship between culmen length and depth, I created a scatterplot, as both variables are continuous. I differentiated between each species' data on the graph using a different colour and shape. Without this differentiation, there does not appear to be any significant trend between the two variables. However, once we can see the different species' data points, it becomes clear that some relationship does exist.
 
@@ -139,7 +131,7 @@ penguin_bar
 
 
 
-**Rescaling and saving the figure**
+#### **Rescaling and saving the figure**
 
 I then tested different versions of the figures: modifying the height, width, and dpi (a proxy for resolution). Here I have inserted two images of the same part of the graph zoomed in, but with different dpis to show the difference resolution makes. The first image is with a dpi of 300, and the second is with a dpi of 1000. 
 
@@ -152,7 +144,7 @@ Clearly, a higher resolution makes a big difference to making these images look 
 
 
 
-I saved all of these different graphs into my 'figures' folder.
+I saved all of the different versions of my graph into my 'figures' folder.
 
 ```{r, warning=FALSE}
 library(ggplot2)
@@ -173,9 +165,9 @@ ggsave("/home/alanazammit/Reproducible_Figures_git/figures/final_figure.png", pl
 
 ### Statistical Method
 
-I decided to perform a linear regression: one for the whole dataset, and one for each of the species, between culmen length and depth, to see if culmen length can be predicted by culmen depth.  
+I decided to perform linear regressions: one for the whole dataset, and one for each of the species, between culmen length and depth, to see if culmen length can be predicted by culmen depth.  
 
-**Testing the assumptions of linear regression**
+#### **Testing the assumptions of linear regression**
 
 Firstly, I had to test that the assumptions of linear regression are true for my dataset: normality and linearity. The residual graphs on the left test the assumption of linearity, and the Q-Q plots test for normality. 
 
@@ -224,37 +216,37 @@ qqnorm(res_gentoo)
 qqline(res_gentoo)
 ```
 
-Overall, it appears that the data fits the assumptions of normality and linearity, and so it is appropriate to fit it with a linear model. 
+Overall, it appears that the data fits the assumptions of normality and linearity, and so it is appropriate to fit each of the different data sets with a linear model. 
 
 
 I then conducted a linear regression for all of the species together, and for each of the species individually
 
-**Linear regression without differentiating by species:**
+#### **Linear regression without differentiating by species:**
 
 ```{r, message=FALSE, warning=FALSE, results='hide'}
 model <- lm(culmen_length_mm ~ culmen_depth_mm, data = penguins_clean)
 ```
 
 
-**Linear regression with differentiation by species:**
+#### **Linear regression with differentiation by species:**
 
 I then conducted three different linear regressions for each species separately, to see if culmen length can be predicted by culmen depth within any of these species.
 
-I did this for adelie penguins first:
+**Adelie penguins**
 
 ```{r, results='hide'}
 adelie_data <- subset(penguins_clean, species == "Adelie Penguin (Pygoscelis adeliae)")
   adelie_model <- lm(data = adelie_data, culmen_length_mm ~ culmen_depth_mm)
 ```
 
-For chinstrap penguins:
+**Chinstrap penguins**
 
 ```{r, results='hide'}
 chinstrap_data <- subset(penguins_clean, species == "Chinstrap penguin (Pygoscelis antarctica)")
   chinstrap_model <- lm(culmen_length_mm ~ culmen_depth_mm, data = chinstrap_data)
 ```
 
-And finally for gentoo penguins:
+**Gentoo penguins**
 
 ```{r, results='hide'}
 gentoo_data <- subset(penguins_clean, species == "Gentoo penguin (Pygoscelis papua)")
@@ -262,21 +254,21 @@ gentoo_data <- subset(penguins_clean, species == "Gentoo penguin (Pygoscelis pap
 ```
 
 
-## Results 
+### Results 
 
-**Linear regression without differentiating by species:**
+#### **Linear regression without differentiating by species:**
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 model <- lm(culmen_length_mm ~ culmen_depth_mm, data = penguins_clean)
 summary(model)
 ```
-These results suggest that the relationship between culmen length and depth is negative, with a 1mm increase in culmen depth leading to a 0.6498mm decrease in culmen length. This relationship was found to be statistically significant, with a p-value of 1.12e-05.
+These results suggest that the relationship between culmen length and depth is negative, with a 1mm increase in culmen depth leading to a 0.6498mm decrease in culmen length. This relationship was found to be statistically significant, with a p-value of 1.12e-05. 
 
 If we display this regression on the graph:
 
 ```{r, warning=FALSE, message=FALSE}
 lm_combined_graph <- ggplot(penguins_clean, aes(x = culmen_depth_mm, y = culmen_length_mm)) +
   geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
+  geom_smooth(method = "lm", se = TRUE) +
   labs(title = "Linear Regression between Culmen Length and Depth",
        x = "Culmen Depth (mm)",
        y = "Culmen Length (mm)") +
@@ -287,12 +279,12 @@ lm_combined_graph
 We can see the negative gradient of the regression line, suggesting culmen depth negatively predicts culmen length.
 
 
-**Linear regression with differentiation by species**
+#### **Linear regression with differentiation by species**
 
 However, if we do differentiate by species, and perform a linear regression for each species separately, we find very different results.
 
 
-Adelie penguins:
+**Adelie penguins**
 
 ```{r, echo=FALSE}
 library(dplyr)
@@ -303,7 +295,7 @@ adelie_data <- subset(penguins_clean, species == "Adelie Penguin (Pygoscelis ade
 Slope estimate of 0.857: a positive relationship. This suggests that for every one mm change in culmen depth (the predictor variable), there will be a 0.857mm change in culmen length (the response variable). This relationship has a P-value of 6.67e-07, meaning there is strong evidence against the null hypothesis of no relationship. 
 
 
-For chinstrap penguins:
+**Chinstrap penguins**
 
 ```{r, echo=FALSE}
 chinstrap_data <- subset(penguins_clean, species == "Chinstrap penguin (Pygoscelis antarctica)")
@@ -313,7 +305,7 @@ chinstrap_data <- subset(penguins_clean, species == "Chinstrap penguin (Pygoscel
 Slope estimate of 1.922: again, a positive relationship, with culmen length increasing by 1.922mm per 1mm increase in culmen depth 
 
 
-And finally for gentoo penguins:
+**Gentoo penguins**
 
 ```{r, echo=FALSE}
 gentoo_data <- subset(penguins_clean, species == "Gentoo penguin (Pygoscelis papua)")
@@ -323,10 +315,10 @@ gentoo_data <- subset(penguins_clean, species == "Gentoo penguin (Pygoscelis pap
 Slope estimate of 2.0208: a positive relationship, with culmen length increasing by 2.0208mm per 1mm increase in culmen depth 
 
 
-In each of these regressions, the slope of the regression line was not equal to zero, and so I can reject the null hypotheses and conclude that culmen length can be predicted by culmen depth. The relationship was found to be positive, although to varying degrees.
+In each of these regressions, the slope of the regression line was not equal to zero, and so I can reject the null hypotheses and conclude that culmen length can be predicted by culmen depth. The relationship was found to be positive, as hypothesised in my alternative hypothesis, although to varying degrees.
 
 
-**Displaying each species' linear regression graphically**
+#### **Displaying each species' linear regression graphically**
 
 I then plotted the linear regression of each species onto one graph, to show the three relationships between culmen length and depth. 
 
@@ -343,7 +335,7 @@ lm_graph
 ```
 
 
-**Saving the graphs depicting the linear regressions**
+#### **Saving the graphs depicting the linear regressions**
 
 Finally, I saved the two graphs showing the linear regressions to my 'figures' folder
 
@@ -356,16 +348,14 @@ ggsave("/home/alanazammit/Reproducible_Figures_R/figures/lm_combined_graph.png",
 
 
 ### Discussion
-There is a positive relationship between culmen length and depth within each of the three species tested. All three linear regressions produced statistically significant p-values, which allows us conclude that we can reject the null hypothesis that there is no relationship between these two variables. However, the R-squared value in the Adelie penguin model was low, where only around 15.33% of the variability in culmen length could be explained by culmen depth. In the other two models, this value was greater at around 40%, but still not particularly high. A low R-squared suggests that the variation in culmen length is not explained by culmen depth, and so our models have little predictive power. Other crucial variables have not been investigated, such as body size, ecology (such as the feeding niche), and age of individual, which could have more power in determining the relationship between culmen length and depth. 
+There is a positive relationship between culmen length and depth within each of the three species tested. All three linear regressions produced statistically significant p-values, which allows us conclude that we can reject the null hypothesis that there is no relationship between these two variables. However, the R-squared value in the Adelie penguin model was low at 15.33. R-squared is the proportion of variation of one variable that is explained by the other variable (Kasuya, 2019), and so this value denotes that only around 15.33% of the variability in culmen length could be explained by culmen depth. In the other two models, this value was greater at around 40%, but still not particularly high. Other crucial variables have not been investigated, such as body size, ecology (such as the feeding niche), sex, and age of individuals, which could have more power in determining the relationship between culmen length and depth. For example, a study conducted in 2005 by Brian Dorr et al found that culmen length could be used to determine sex in the American White Pelican. If there was also such a strong relationship between culmen length and sex in these penguins, then this analyses would have to be repeated with differentiation between the two sexes.  
   
-  The negative relationship between culmen length and depth across species was surprising, but is a result of what is known as 'Simpson’s Paradox'. This is the name given to a trend which is apparent in separate groups of data, but when they are combined to form one dataset, the trend disappears or is reversed. We therefore must exercise caution when combining data from different species, or from any different groupings, as it gives very misleading results. 
-
-
+  The negative relationship between culmen length and depth across species was surprising, but is a result of what is known as 'Simpson’s Paradox'. This is the name given to a trend which is apparent in separate groups of data, but when they are combined to form one dataset, the trend disappears or is reversed (Julious, 1994). We therefore must exercise caution when combining data from different species, or from any different groupings, as it can give very misleading results. 
 
 ### Conclusion
 To conclude, the null hypothesis that the slope of the regression line is equal to zero can be rejected to a highly significant degree: culmen length can be predicted by its depth for each of the three species. Within species, an increase in culmen depth predicts in an increase in culmen length. If we combine data across the three species, the positive relationship found within species is reversed, and culmen length can be predicted by its depth in the reverse manner: an increase in depth results in a decrease in length. This is an example of Simpson's paradox, and exemplifies that caution must be taken when combining data from differnet species or groupings into one dataset. Future research should look into whether there is an overarching relationship between culmen length and depth across all penguins species. 
 
-The main limitation of my analysis was that there were many confounding factors not controlled for, that could have easily influenced my results. I analysed data across both sexes, and all ages; both of these variables could have been subgrouped to ensure that the analyses was more accurate. Furthermore, my analyses spanned 3 different islands (Torgerson, Biscoe, and Dream), which may all vary greatly in selective pressures. Therefore, whilst I have concluded that culmen depth can predict culmen length to some extent, the affects of sex, age, and island must all be investigated to determine the strength of this association. 
+The main limitation of my analysis was that there were many confounding factors not controlled for, that could have easily influenced my results. I analysed data across both sexes, and all ages; both of these variables could have been subgrouped to ensure that the analyses was more accurate. Furthermore, my analyses spanned 3 different islands (Torgerson, Biscoe, and Dream), which may all vary greatly in selective pressures. Therefore, whilst I have concluded that culmen depth can predict culmen length to some extent, the effects of sex, age, and island must all be investigated to determine the strength of this association. 
 
 ------------------------------------------------------------------------
 
@@ -373,40 +363,55 @@ The main limitation of my analysis was that there were many confounding factors 
 
 ### a) GitHub
 
-*Upload your RProject you created for **Question 2*
-
-*GitHub link:* [Link to my repository on Github](https://github.com/mimzy64/Reproducible_Figures_R)
-
-Above is the link to my github repository, containing all necessary files and folders
+*My GitHub link:* [Link to my repository on Github](https://github.com/mimzy64/Reproducible_Figures_R)
 
 
 ### b) Share your repo with a partner, download, and try to run their data pipeline.
 
-*Partner's GitHub link:* [Link to my partner's repository on Github](https://github.com/pepperepperepper/reproducible_figures_assignment)
-
-Above is my partner's link 
+*My partner's GitHub link:* [Link to my partner's repository on Github](https://github.com/pepperepperepper/reproducible_figures_assignment)
 
 
 ### c) Reflect on your experience running their code. (300-500 words)
 
--   *What elements of your partner's code helped you to understand their data pipeline?*
-My parnter included lots of text inbetween their code using hashtags within the code blocks to detail what they were doing. This made it clear to me what was being done at each stage, and allowed me to follow along with their pipeline. For example, in the introduction when beginning to work with the Palmer Penguins dataset, they used subtitles such as '# Load the data' and '# Load the functions files into the document' to tell the reader what they were doing with every piece of code. Furthermore, by using functions, their code was kept simple and clean in the Rmarkdown file. This allowed me to follow along with what they were doing without becoming overwhelmed by an unnecessary amount of code in between text. For example, their pre-prepared cleaning functions simply had to be loaded in using the code 'source("functions/cleaning_penguins.r")', for them to be used to clean the dataset as desired. 
+#### *What elements of your partner's code helped you to understand their data pipeline?*
 
--   *Did it run? Did you need to fix anything?*
+My partner included lots of text in between their code using hash tags within the code blocks to detail what they were doing. This made it clear to me what was being done at each stage, and allowed me to follow along with their pipeline. For example, in the introduction when beginning to work with the Palmer Penguins data set, they used subtitles such as '# Load the data' and '# Load the functions files into the document' to tell the reader what they were doing with every piece of code. Furthermore, by using functions, their code was kept simple and clean in the Rmarkdown file. This allowed me to follow along with what they were doing without becoming overwhelmed by an unnecessary amount of code in between text. For example, their pre-prepared cleaning functions simply had to be loaded in using the code 'source("functions/cleaning_penguins.r")', for them to be used to clean the data set as desired. 
+
+#### *Did it run? Did you need to fix anything?*
+
 The code ran perfectly, except from at the very start when I had to change the names of the functions in the code from ending with .R rather than .r. 
 
--   *What suggestions would you make for improving their code to make it more understandable or reproducible, and why?*
+#### *What suggestions would you make for improving their code to make it more understandable or reproducible, and why?*
+
 I think that the code provided by my partner was very well created in terms of its clarity and reproducibility. To improve it, I can provide only small suggestions. To make the code more understandable, they could have written small explanations of what they were doing in between the chunks of code, as someone with less coding knowledge may find it difficult to understand what the purpose/importance of each chunk was. They have written small explanations in the code using hashtags but this is harder to follow than a simple explanation at the beginning of each chunk would be. 
 
 Beyond this, the names that they have given to their models and figures are human friendly and appropriate for what they represent, so I cannot suggest any improvements there. They used piping to ensure that they did not overwrite any of their code, and allowed several operations to be chained together into one function. By creating data pipelines, they also ensured that their code was reusable, even when applied for different purposes. Therefore, I cannot think of any other improvements that could be applied to their code!
 
 
--   *If you needed to alter your partner's figure using their code, do you think that would be easy or difficult, and why?*
+#### *If you needed to alter your partner's figure using their code, do you think that would be easy or difficult, and why?*
+
 I tested this and changed the colour of the Adelie data points, and the name of the y-axis on their scatterplot showing culmen length against flipper length, and I found it easy to alter my partner's figure. I had to make the adjustments to the code in the plotting_penguins.R function file, and then re-run this file in the rmarkdown file to update it. Then when I plotted the graph using the plotting function, it included my updates. It might have been easier if a function had not been used to plot the graph and I could have changed the code directly in the Rmarkdown file, but then this change would not have been applicable to other chunks of coding, and so by having the code for the plotting as a function, the reproducubility of the code was increased. 
 
 
 ### d) Reflect on your own code based on your experience with your partner's code and their review of yours. (300-500 words)
 
--   *What improvements did they suggest, and do you agree?*
+#### *What improvements did they suggest, and do you agree?*
 
--   *What did you learn about writing code for other people?*
+My partner suggested that I create a file with all of my functions in to make my code neater and more understandable. I think this is a good suggestion. I have a functions file with a cleaning function in which has neatened my cleaning code, but could create a plotting function as they suggested. This would shorten the code used to plot my graphs and avoid the code repetition which occurs as I plotted several graphs. They also suggested I only clean the data once, instead of showing how I would clean the code without a cleaning function and then with the cleaning function. I have applied this suggestion and now only clean the data using the cleaning function. Finally, they suggest that I only use the summary() function once in my code, to reduce the amount of space this output takes up. This is a good suggestion. Although the output from the summary() function was hidden in the methods section using results = 'hide', it was unnecessary to have the summary() function in the code at all. So, upon their suggestion, I have removed this code. 
+
+
+#### *What did you learn about writing code for other people?*
+
+I have learnt that writing code for other people is much more beneficial than I previously expected! Without other people in mind, it is easy to create chaos in a working environment, that may make sense intuitively to oneself, but is incomprehensible to others. Investing time upfront to create functions and organise them into structured folders significantly eases the entire coding process. While it might seem time-consuming initially, this approach ultimately streamlines work, making future coding endeavors smoother and more efficient. This also greatly increases the code's reproducibility, allowing others to recreate  results when running the code. This is a critical aspect of scientific research, data analysis, and software development, and so it is essential that code is clear and reproducible so that others can replicate the findings. Furthermore, by following these extra steps and creating code that is clear and well-structured, the work produced is not only more accessible to others, but is better for the coder themselves. It aids in debugging, modifying, and extending it when necessary, which are all essential tasks. Therefore, through the process of writing code for others, I have become more conscientious about the choices I make in my code organisation, clarity, and documentation. The consequences of how I arrange my code and the functions I use are far-reaching, and so I will now always take the time to ensure my code is reproducible. 
+
+
+## References
+Correll, M., Bertini, E., & Franconeri, S. (2020, April). Truncating the y-axis: Threat or menace?. In Proceedings of the 2020 CHI Conference on Human Factors in Computing Systems (pp. 1-12).
+
+Brian Dorr, D. Tommy King, J. Brent Harrel, Patrick Gerard, and Marilyn G. Spalding "The Use of Culmen Length to Determine Sex of the American White Pelican," Waterbirds 28(sp1), 102-106, (1 December 2005). https://doi.org/10.1675/1524-4695(2005)28[102:TUOCLT]2.0.CO;2
+
+Julious, S. A., & Mullee, M. A. (1994). Confounding and Simpson's paradox. Bmj, 309(6967), 1480-1481.
+
+Kasuya, E. (2019). On the use of r and r squared in correlation and regression (Vol. 34, No. 1, pp. 235-236). Hoboken, USA: John Wiley & Sons, Inc..
+
+Olande, O. (2013). Making sense of a" misleading" graph. Nordisk matematikkdidaktikk, 18(1), 5-30.
