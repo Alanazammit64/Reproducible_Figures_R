@@ -17,10 +17,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r bad figure code, echo=FALSE, message=FALSE, warning=FALSE}
 # Load the packages:
+
 library(ggplot2)
 library(palmerpenguins)
 library(janitor)
 library(dplyr)
+dir.create("functions/")
 
 data("penguins")
 
@@ -71,7 +73,7 @@ My hypotheses are for regressions within species (I will conduct a separate regr
 
 H₀: The slope of the regression line is equal to zero (β) = 0; culmen length is not predicted by culmen depth 
 
-H₁: The slope of the regression line is greater than zero (β) ≠ 0; an increase in culmen depth predicts an increase in culmen length 
+H₁: The slope of the regression line is greater than zero (β) > 0; an increase in culmen depth predicts an increase in culmen length 
 
 ![Adelie, Gentoo, and Chinstrap size comparision](differentpenguins.jpg){ width=300px }
 
@@ -100,41 +102,22 @@ I could then clean the penguins_raw dataset, knowing that there is a safe read-o
 **Cleaning the data**
 
 ```{r, warning=FALSE}
-penguins_clean <- penguins_raw %>%
-  select(-starts_with("Delta")) %>% # The carbon isotopes are not relevant to our analyses
-  select(-Comments) %>% # The comments are not necessary for statistical analyses or graphical depictions of the data
-  clean_names()
-names(penguins_clean) # View the names to ensure they have been correctly cleaned
+# Loading my cleaning function into the directory
+source("functions/cleaning.R") # this contains the cleaning functions
+
+# Cleaning the data using my cleaning function (in the functions folder)
+penguins_clean <- cleaning(penguins_raw)
 
 # Saving the cleaned data as a separate csv file 
 dir.create("data_clean/")
 write.csv(penguins_clean, "data_clean/penguins_clean.csv")
 ```
 
-I created a new variable called 'penguins_clean' so that I did not override the penguins_raw variable, and therefore by creating a new variable with the removed columns, this code can be repeatedly run without causing any errors. This is done through the package dplyr using piping, which is where the operator %\>% allows multiple functions to be joined together in their specific order.
+To clean my data, I created a cleaning function which can be found in the folder 'functions'. This allows the function to be applied to lots of different code, and thus increases the code's reproducibility. 
 
-It was then necessary to clean the names of the columns, as they are very problematic in the raw dataset; they include mixed capitals and lower case letters, and spaces between words which often causes issues in coding. Whilst it may be easier to make changes to the column names directly in the excel spreadsheet, this is unreproducible, as others cannot see these changes taking place. Therefore we must change them in our code. This can be done by adding an extra line of code to our data cleaning, using the piping operator %\>% to include name cleaning in the overall cleaning function. The clean_names() function is part of the janitor package and is used to standardise column names within a data frame: it converts capital letters to lower case; replaces spaces, punctuation, and special characters from column names with underscores; and removes characters that are not letters, numbers, or underscores.
+I created a new variable called 'penguins_clean' so that I did not override the penguins_raw variable, and therefore by creating a new variable with the removed columns, this code can be repeatedly run without causing any errors. This is done through the package dplyr using piping, which is where the operator %>% allows multiple functions to be joined together in their specific order.
 
-Here I created a folder of functions, to put the cleaning function inside
-
-```{r, warning=FALSE}
-dir.create("functions/")
-```
-
-It is easier to make the cleaning code into a function, so that it can easily be applied to any other code. This makes the code reusable. I have called this function 'cleaning'
-
-```{r}
-cleaning <- function(data_raw){ # 'data' must be general so it can be applied to other code 
-  data_raw %>% 
-    clean_names() %>% # function from janitor package
-    select(-starts_with("delta")) %>% # removing the same columns that were not useful in our previous cleaning function 
-    select(-comments) %>% 
-    remove_empty(c("rows", "cols")) # removes any empty columns or rows
-}
-
-penguins_clean2 <- cleaning(penguins_raw)
-names(penguins_clean2)
-```
+It was then necessary to clean the names of the columns, as they are very problematic in the raw dataset; they include mixed capitals and lower case letters, and spaces between words which often causes issues in coding. Whilst it may be easier to make changes to the column names directly in the excel spreadsheet, this is unreproducible, as others cannot see these changes taking place. Therefore we must change them in our code. This can be done by adding an extra line of code to our data cleaning, using the piping operator %>% to include name cleaning in the overall cleaning function. The clean_names() function is part of the janitor package and is used to standardise column names within a data frame: it converts capital letters to lower case; replaces spaces, punctuation, and special characters from column names with underscores; and removes characters that are not letters, numbers, or underscores.
 
 
 
@@ -250,7 +233,6 @@ I then conducted a linear regression for all of the species together, and for ea
 
 ```{r, message=FALSE, warning=FALSE, results='hide'}
 model <- lm(culmen_length_mm ~ culmen_depth_mm, data = penguins_clean)
-summary(model)
 ```
 
 
@@ -261,10 +243,8 @@ I then conducted three different linear regressions for each species separately,
 I did this for adelie penguins first:
 
 ```{r, results='hide'}
-library(dplyr)
 adelie_data <- subset(penguins_clean, species == "Adelie Penguin (Pygoscelis adeliae)")
   adelie_model <- lm(data = adelie_data, culmen_length_mm ~ culmen_depth_mm)
-  summary(adelie_model)
 ```
 
 For chinstrap penguins:
@@ -272,7 +252,6 @@ For chinstrap penguins:
 ```{r, results='hide'}
 chinstrap_data <- subset(penguins_clean, species == "Chinstrap penguin (Pygoscelis antarctica)")
   chinstrap_model <- lm(culmen_length_mm ~ culmen_depth_mm, data = chinstrap_data)
-  summary(chinstrap_model)
 ```
 
 And finally for gentoo penguins:
@@ -280,7 +259,6 @@ And finally for gentoo penguins:
 ```{r, results='hide'}
 gentoo_data <- subset(penguins_clean, species == "Gentoo penguin (Pygoscelis papua)")
   gentoo_model <- lm(culmen_length_mm ~ culmen_depth_mm, data = gentoo_data)
-  summary(gentoo_model)
 ```
 
 
@@ -395,27 +373,37 @@ The main limitation of my analysis was that there were many confounding factors 
 
 ### a) GitHub
 
-*Upload your RProject you created for **Question 2** and any files and subfolders used to GitHub. Do not include any identifiers such as your name. Make sure your GitHub repo is public.*
+*Upload your RProject you created for **Question 2*
 
 *GitHub link:* [Link to my repository on Github](https://github.com/mimzy64/Reproducible_Figures_R)
 
-*You will be marked on your repo organisation and readability.*
+Above is the link to my github repository, containing all necessary files and folders
+
 
 ### b) Share your repo with a partner, download, and try to run their data pipeline.
 
-*Partner's GitHub link:*
+*Partner's GitHub link:* [Link to my partner's repository on Github](https://github.com/pepperepperepper/reproducible_figures_assignment)
 
-*You **must** provide this so I can verify there is no plagiarism between you and your partner.*
+Above is my partner's link 
+
 
 ### c) Reflect on your experience running their code. (300-500 words)
 
 -   *What elements of your partner's code helped you to understand their data pipeline?*
+My parnter included lots of text inbetween their code using hashtags within the code blocks to detail what they were doing. This made it clear to me what was being done at each stage, and allowed me to follow along with their pipeline. For example, in the introduction when beginning to work with the Palmer Penguins dataset, they used subtitles such as '# Load the data' and '# Load the functions files into the document' to tell the reader what they were doing with every piece of code. Furthermore, by using functions, their code was kept simple and clean in the Rmarkdown file. This allowed me to follow along with what they were doing without becoming overwhelmed by an unnecessary amount of code in between text. For example, their pre-prepared cleaning functions simply had to be loaded in using the code 'source("functions/cleaning_penguins.r")', for them to be used to clean the dataset as desired. 
 
 -   *Did it run? Did you need to fix anything?*
+The code ran perfectly, except from at the very start when I had to change the names of the functions in the code from ending with .R rather than .r. 
 
 -   *What suggestions would you make for improving their code to make it more understandable or reproducible, and why?*
+I think that the code provided by my partner was very well created in terms of its clarity and reproducibility. To improve it, I can provide only small suggestions. To make the code more understandable, they could have written small explanations of what they were doing in between the chunks of code, as someone with less coding knowledge may find it difficult to understand what the purpose/importance of each chunk was. They have written small explanations in the code using hashtags but this is harder to follow than a simple explanation at the beginning of each chunk would be. 
+
+Beyond this, the names that they have given to their models and figures are human friendly and appropriate for what they represent, so I cannot suggest any improvements there. They used piping to ensure that they did not overwrite any of their code, and allowed several operations to be chained together into one function. By creating data pipelines, they also ensured that their code was reusable, even when applied for different purposes. Therefore, I cannot think of any other improvements that could be applied to their code!
+
 
 -   *If you needed to alter your partner's figure using their code, do you think that would be easy or difficult, and why?*
+I tested this and changed the colour of the Adelie data points, and the name of the y-axis on their scatterplot showing culmen length against flipper length, and I found it easy to alter my partner's figure. I had to make the adjustments to the code in the plotting_penguins.R function file, and then re-run this file in the rmarkdown file to update it. Then when I plotted the graph using the plotting function, it included my updates. It might have been easier if a function had not been used to plot the graph and I could have changed the code directly in the Rmarkdown file, but then this change would not have been applicable to other chunks of coding, and so by having the code for the plotting as a function, the reproducubility of the code was increased. 
+
 
 ### d) Reflect on your own code based on your experience with your partner's code and their review of yours. (300-500 words)
 
